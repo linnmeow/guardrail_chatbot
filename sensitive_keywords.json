@@ -1,0 +1,12 @@
+{
+    "sensitive_keywords": [
+        "credit card", 
+        "password", 
+        "ssn", 
+        "social security number", 
+        "phone number", 
+        "email",
+        "bank account",
+        "passport number"
+    ]
+}
