@@ -21,7 +21,8 @@ client = OpenAI(api_key=openai_api_key)
 # load sensitive keywords from JSON file
 with open("sensitive_keywords.json", "r") as file:
     data = json.load(file)
-    SENSITIVE_KEYWORDS = data["sensitive_keywords"]
+    HIGH_SENSITIVITY_KEYWORDS = data["high_sensitivity_keywords"]
+    MEDIUM_SENSITIVITY_KEYWORDS = data["medium_sensitivity_keywords"]
 
 # load topics and their associated keywords from JSON file
 with open("topics.json", "r") as file:
@@ -35,28 +36,41 @@ class InputGuardrails:
     def detect_sensitive_info(self, text):
         """
         Detects sensitive information in user input, including keywords, phone numbers, emails, and credit card numbers.
+        Returns a tuple (is_sensitive, response_message) where is_sensitive is a boolean and response_message is a string.
         """
-        # check for sensitive keywords
-        for keyword in SENSITIVE_KEYWORDS:
-            if keyword in text.lower():
-                return True
+        text_lower = text.lower()
+
+        # check for high sensitivity keywords
+        for keyword in HIGH_SENSITIVITY_KEYWORDS:
+            if keyword in text_lower:
+                return True, "I’m sorry, but I can’t process requests containing sensitive information."
+
+        # check for medium sensitivity keywords
+        for keyword in MEDIUM_SENSITIVITY_KEYWORDS:
+            if keyword in text_lower:
+                if keyword == "email":
+                    return True, "I can help you with general questions, but for security reasons, I cannot process email addresses. Please visit our support page for assistance."
+                elif keyword == "phone number":
+                    return True, "I’m unable to process phone numbers directly. Please contact our support team for further assistance."
+                elif keyword == "password":
+                    return True, "For security reasons, I cannot assist with password-related issues. Please use our password recovery tool."
 
         # check for phone numbers using regex
         phone_regex = r"\+?\d{1,3}[-.\s]?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         if re.search(phone_regex, text):
-            return True
+            return True, "I’m unable to process phone numbers directly. Please contact our support team for further assistance."
 
         # check for email addresses using regex
         email_regex = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
         if re.search(email_regex, text):
-            return True
+            return True, "I can help you with general questions, but for security reasons, I cannot process email addresses. Please visit our support page for assistance."
 
         # check for credit card numbers using regex
         credit_card_regex = r"\b(?:\d[ -]*?){13,16}\b"
         if re.search(credit_card_regex, text):
-            return True
+            return True, "I’m sorry, but I can’t process requests containing sensitive information."
 
-        return False
+        return False, None
 
     def moderate_input(self, text):
         """
@@ -80,8 +94,9 @@ class InputGuardrails:
         Validates user input for sensitive information, offensive content, and topic relevance.
         """
         # check for sensitive information
-        if self.detect_sensitive_info(user_input):
-            return False, "I’m sorry, but I can’t process requests containing sensitive information."
+        is_sensitive, sensitive_response = self.detect_sensitive_info(user_input)
+        if is_sensitive:
+            return False, sensitive_response
 
         # check for offensive or harmful content
         if self.moderate_input(user_input):
@@ -101,11 +116,21 @@ class OutputGuardrails:
     def detect_sensitive_info(self, text):
         """
         Detects sensitive information in chatbot responses.
+        Returns True if sensitive information is found, otherwise False.
         """
-        for keyword in SENSITIVE_KEYWORDS:
-            if keyword in text.lower():
+        text_lower = text.lower()
+
+        # check for high sensitivity keywords
+        for keyword in HIGH_SENSITIVITY_KEYWORDS:
+            if keyword in text_lower:
                 return True
-        return False
+            return False
+
+        # check for medium sensitivity keywords
+        for keyword in MEDIUM_SENSITIVITY_KEYWORDS:
+            if keyword in text_lower:
+                return True
+            return False
 
     def moderate_output(self, text):
         """
