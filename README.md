@@ -51,7 +51,19 @@ The chatbot enforces the following guardrail policies:
 
 ---
 
-## Configuration
+## Setup and Installation
+
+### Requirements
+
+The `requirements.txt` file lists the Python dependencies required to run the chatbot. These include:
+
+- `openai`: For interacting with the OpenAI API.
+- `python-dotenv`: For loading environment variables from a `.env` file.
+
+To install the dependencies, run:
+```bash
+pip install -r requirements.txt
+```
 
 ### Set Up Environment Variables
 Create a `.env` file in the root directory and add your OpenAI API key (encoded in Base64).
@@ -86,14 +98,3 @@ Add more content to `sensitive_keywords.json` or `topics.json`.
 - **Output** (without guardrails): "I'm sorry, but as an AI assistant, I don't have access to real-time information or the ability to track orders. Please contact the company or merchant you placed the order with directly to inquire about the status of your order. They should be able to provide you with the most up-to-date information regarding your purchase."
 
 ---
-
-## Requirements
-
-The `requirements.txt` file lists all the Python dependencies required to run the chatbot. These include:
-
-- `openai`: For interacting with the OpenAI API.
-- `python-dotenv`: For loading environment variables from a `.env` file.
-
-To install the dependencies, run:
-```bash
-pip install -r requirements.txt
