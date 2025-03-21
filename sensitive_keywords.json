@@ -1,12 +1,14 @@
 {
-    "sensitive_keywords": [
+    "high_sensitivity_keywords": [
         "credit card", 
-        "password", 
         "ssn", 
         "social security number", 
-        "phone number", 
-        "email",
-        "bank account",
+        "bank account", 
         "passport number"
+    ],
+    "medium_sensitivity_keywords": [
+        "email", 
+        "phone number", 
+        "password"
     ]
 }
