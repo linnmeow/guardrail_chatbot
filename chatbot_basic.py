@@ -47,7 +47,7 @@ def main():
     print("Welcome to the Customer Support Chatbot!")
     while True:
         user_input = input("You: ")
-        if user_input.lower() in ["thanks", "goodbye", "bye"]:
+        if user_input.lower() in ["thanks", "goodbye", "bye", "quit", "exit"]:
             print("Chatbot: Goodbye! Have a great day.")
             break
         response = chatbot.chat(user_input)
