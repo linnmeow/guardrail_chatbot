@@ -155,7 +155,13 @@ class OutputGuardrails:
 
 class Chatbot:
     def __init__(self):
-        self.history = []  # store conversation history for context
+        # store conversation history for context with system prompt
+        self.history = [
+            {
+                "role": "system",
+                "content": "You are a helpful customer support assistant."
+            }
+        ]  
         self.input_guardrails = InputGuardrails()
         self.output_guardrails = OutputGuardrails()
 
